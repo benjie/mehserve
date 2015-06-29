@@ -12,6 +12,11 @@ server.on('request', function(req, res) {
       address: '127.0.0.1',
       ttl: 600
     }));
+    res.answer.push(dns.AAAA({
+      name: req.question[0].name,
+      address: '::1',
+      ttl: 600
+    }));
     return res.send();
   }
 });
