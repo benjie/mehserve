@@ -4,8 +4,8 @@ fs = require 'fs'
 request = require 'request'
 
 CONFIG_DIR="#{process.env.HOME}/.mehserve"
-PORT = process.env.PORT ? 8080
-SUFFIXES=[".localhost:#{PORT}"]
+PORT = process.env.PORT ? 12439
+SUFFIXES=[".dev", ".meh"]
 
 readConfig = (req, res, next) ->
   async.waterfall [
@@ -116,3 +116,6 @@ server.use readConfig
 server.use handle
 httpServer = server.listen PORT, ->
   port = httpServer.address().port
+
+dnsServer = require './dnsserver'
+dnsServer.serve 15353
