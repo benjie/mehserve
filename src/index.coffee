@@ -1,6 +1,7 @@
 async = require 'async'
 express = require 'express'
 fs = require 'fs'
+httpProxy = require 'http-proxy'
 request = require 'request'
 
 CONFIG_DIR="#{process.env.HOME}/.mehserve"
@@ -86,36 +87,29 @@ serve = (req, res, next) ->
   staticMiddlewares[path] ?= express.static(path)
   staticMiddlewares[path](req, res, next)
 
+
+proxy = httpProxy.createProxyServer {host: "localhost", ws: true}
 forward = (req, res, next) ->
   config = req.config
   port = config.port
-  headers = {}
+  proxy.web req, res, {target: {port: port}}, next
 
-  for key, value of req.headers when value?
-    headers[key] = value
+upgrade = (req, socket, head) ->
+  readConfig req, null, (err) ->
+    return socket.close() if err
+    config = req.config
+    port = config.port
+    proxy.ws req, socket, head, {target: {port: port}}
 
-  headers['X-Forwarded-For'] = req.connection.address().address ? "-"
-
-  proxy = request
-    method: req.method
-    url: forwardUrl = "http://localhost:#{port}#{req.url}"
-    headers: headers
-    jar: false
-    followRedirect: false
-
-  req.pipe proxy
-  proxy.pipe res
-
-  proxy.on 'error', (err) ->
-    res.status(500).send "ERROR #{err?.message}"
-
-  req.resume()
 
 server = express()
 server.use readConfig
 server.use handle
+
 httpServer = server.listen PORT, ->
   port = httpServer.address().port
+
+httpServer.on 'upgrade', upgrade
 
 dnsServer = require './dnsserver'
 dnsServer.serve 15353
