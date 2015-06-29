@@ -1,0 +1,24 @@
+{
+  "name": "mehserve",
+  "version": "1.0.0",
+  "description": "A simple port-sharing proxy for development on multiple local domains, supports websockets",
+  "main": "index.js",
+  "bin": {
+    "mehserve": "./bin/mehserve"
+  },
+  "scripts": {
+    "prepublish": "coffee -cbmo . src",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "coffee -cwbmo . src"
+  },
+  "author": "Benjie Gillam <code@benjiegillam.com>",
+  "license": "MIT",
+  "dependencies": {
+    "async": "^1.2.1",
+    "express": "^4.13.0",
+    "request": "^2.58.0"
+  },
+  "devDependencies": {
+    "coffee-script": "^1.9.3"
+  }
+}
