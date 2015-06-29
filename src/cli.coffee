@@ -9,6 +9,7 @@ if args[0] is "install"
     Run:
 
       sudo cp #{__dirname}/meh.resolver /etc/resolver/meh
+      sudo cp #{__dirname}/meh.resolver /etc/resolver/dev
       sudo cp #{__dirname}/meh.firewall.plist /Library/LaunchDaemons/meh.firewall.plist
       sudo launchctl load -w /Library/LaunchDaemons/meh.firewall.plist
     """
