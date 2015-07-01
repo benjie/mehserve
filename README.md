@@ -36,12 +36,26 @@ additional configuration.
 We've currently only instructed you how to do this on OS X; pull requests
 welcome.
 
+### Installing
+
 ```bash
 npm install -g mehserve
 mehserve install
 ```
 
 follow the instructions to set up port forwarding and DNS resolution.
+
+### Running
+
+To run the server:
+
+`mehserve run`
+
+(we don't currently daemonize the server, pull requests welcome)
+
+### Configuring subdomains
+
+#### Port forwarding
 
 To set up a subdomain, simply run
 
@@ -50,9 +64,18 @@ To set up a subdomain, simply run
 This'll tell mehserve to proxy all requests for `http://mysite.dev/` to
 `http://localhost:1337`
 
+#### Static files
+
 Alternatively, to serve static files:
 
 `mehserve staticsite /path/to/public`
 
 This'll tell mehserve to serve static content from `/path/to/public/` to anyone
 requesting `http://staticsite.dev/`
+
+## TODO
+
+- Tests
+- Error pages
+- Daemonize
+- Linux instructions
