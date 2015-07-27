@@ -2,15 +2,18 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+        <key>Disabled</key>
+        <false/>
         <key>Label</key>
         <string>meh.firewall</string>
+        <key>WorkingDirectory</key>
+        <string>/var/run</string>
         <key>ProgramArguments</key>
         <array>
                 <string>/bin/sh</string>
                 <string>-c</string>
                 <string>
-                  sysctl -w net.inet.ip.forwarding=1;
-                  echo "rdr pass proto tcp from any to any port {80,12439} -> 127.0.0.1 port 12439" | pfctl -a "com.apple/250.MehFirewall" -Ef -
+                  echo "rdr pass proto tcp from any to any port 80 -> 127.0.0.1 port 12439" | pfctl -a "com.apple/250.ApplicationFirewall" -f - -E
                 </string>
         </array>
         <key>RunAtLoad</key>
