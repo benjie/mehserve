@@ -2,7 +2,7 @@ async = require 'async'
 express = require 'express'
 fs = require 'fs'
 httpProxy = require 'http-proxy'
-request = require 'request'
+{version} = require('./package')
 
 CONFIG_DIR="#{process.env.HOME}/.mehserve"
 PORT = process.env.PORT ? 12439
@@ -108,6 +108,7 @@ server.use handle
 
 httpServer = server.listen PORT, ->
   port = httpServer.address().port
+  console.log "mehserve v#{version} listening on port #{port}"
 
 httpServer.on 'upgrade', upgrade
 
