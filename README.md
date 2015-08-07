@@ -73,6 +73,12 @@ Alternatively, to serve static files:
 This'll tell mehserve to serve static content from `/path/to/public/` to anyone
 requesting `http://staticsite.dev/`
 
+#### DNS resolution fails whilst offline
+
+This is an issue with discoveryd (it also affects Pow - see
+https://github.com/basecamp/pow/issues/471) - should be fixed by
+updating to OS X 10.10.4
+
 ## TODO
 
 - Tests
