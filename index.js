@@ -15,18 +15,17 @@ CONFIG_DIR = process.env.HOME + "/.mehserve";
 
 PORT = (ref = process.env.PORT) != null ? ref : 12439;
 
-SUFFIXES = [".dev", ".meh"];
+SUFFIXES = [/\.dev$/i, /\.meh$/i, /(\.[0-9]+){2,4}\.xip\.io$/i];
 
 readConfig = function(req, res, next) {
   return async.waterfall([
     function(done) {
-      var endOfHost, host, j, len, suffix;
+      var host, j, len, suffixRegexp;
       host = req.headers.host;
       for (j = 0, len = SUFFIXES.length; j < len; j++) {
-        suffix = SUFFIXES[j];
-        endOfHost = host.substr(host.length - suffix.length);
-        if (endOfHost.toLowerCase() === suffix.toLowerCase()) {
-          host = host.substr(0, host.length - suffix.length);
+        suffixRegexp = SUFFIXES[j];
+        if (suffixRegexp.test(host)) {
+          host = host.replace(suffixRegexp, "");
           break;
         }
       }

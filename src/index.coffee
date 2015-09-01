@@ -6,17 +6,16 @@ httpProxy = require 'http-proxy'
 
 CONFIG_DIR="#{process.env.HOME}/.mehserve"
 PORT = process.env.PORT ? 12439
-SUFFIXES=[".dev", ".meh"]
+SUFFIXES=[/\.dev$/i, /\.meh$/i, /(\.[0-9]+){2,4}\.xip\.io$/i]
 
 readConfig = (req, res, next) ->
   async.waterfall [
     # Determine host from header
     (done) ->
       host = req.headers.host
-      for suffix in SUFFIXES
-        endOfHost = host.substr(host.length - suffix.length)
-        if endOfHost.toLowerCase() is suffix.toLowerCase()
-          host = host.substr(0, host.length - suffix.length)
+      for suffixRegexp in SUFFIXES
+        if suffixRegexp.test(host)
+          host = host.replace(suffixRegexp, "")
           break
       done null, host
 
