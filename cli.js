@@ -8,7 +8,7 @@ CONFIG_DIR = process.env.HOME + "/.mehserve";
 args = process.argv.slice(2);
 
 if (args[0] === "install") {
-  console.log("Run:\n\n  sudo cp " + __dirname + "/meh.resolver /etc/resolver/meh\n  sudo cp " + __dirname + "/meh.resolver /etc/resolver/dev\n  sudo cp " + __dirname + "/meh.firewall.plist /Library/LaunchDaemons/meh.firewall.plist\n  sudo launchctl load -w /Library/LaunchDaemons/meh.firewall.plist");
+  console.log("Run:\n\n  sudo mkdir -p /etc/resolver\n  sudo cp " + __dirname + "/meh.resolver /etc/resolver/meh\n  sudo cp " + __dirname + "/meh.resolver /etc/resolver/dev\n  sudo cp " + __dirname + "/meh.firewall.plist /Library/LaunchDaemons/meh.firewall.plist\n  sudo launchctl load -w /Library/LaunchDaemons/meh.firewall.plist");
 } else if (args[0] === "run") {
   require('./index');
 } else if (args.length === 2) {

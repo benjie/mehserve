@@ -8,6 +8,7 @@ if args[0] is "install"
   console.log """
     Run:
 
+      sudo mkdir -p /etc/resolver
       sudo cp #{__dirname}/meh.resolver /etc/resolver/meh
       sudo cp #{__dirname}/meh.resolver /etc/resolver/dev
       sudo cp #{__dirname}/meh.firewall.plist /Library/LaunchDaemons/meh.firewall.plist
