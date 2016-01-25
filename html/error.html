@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{{code}} {{title}}</title>
+  <style type="text/css">
+    html, body {
+      background-color: #eee;
+      font-family: "Helvetica Neue", Helvetica, sans-serif;
+    }
+
+    section {
+      margin: 5em auto;
+      width: 30em;
+      background: #fff;
+      padding: 1em 3em;
+      border: 1px #aaa;
+      box-shadow: 2px 2px 3px #aaa;
+      border-radius: .5em;
+    }
+
+    a {
+      color: #0645AD;
+      text-decoration: none;
+      font-size: 90%;
+    }
+
+    #details-block {
+      display: none;
+      overflow: auto;
+    }
+  </style>
+</head>
+<body>
+  <section>
+    <h1>{{code}} {{title}}</h1>
+    <p>{{message}}</p>
+    <p>
+    <a href="#" id="show-details"><span>+</span> Details</a>
+    <pre id="details-block"><code>{{details}}</code></pre>
+    </p>
+    <hr/>
+    <p><small>mehserve {{version}}</small></p>
+  </section>
+  <script type="text/javascript">
+    link = document.getElementById('show-details');
+    link.addEventListener('click', function() {
+      details = document.getElementById('details-block');
+      if (details.style.display == 'block') {
+        details.style.display = 'none';
+        link.children[0].innerText = '+';
+      } else {
+        details.style.display = 'block';
+        link.children[0].innerText = '-';
+      }
+    });
+  </script>
+</body>
+</html>
