@@ -82,6 +82,5 @@ updating to OS X 10.10.4
 ## TODO
 
 - Tests
-- Error pages
 - Daemonize
 - Linux instructions
