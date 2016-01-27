@@ -1,4 +1,6 @@
 .gitignore
 .npmignore
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
 src
 test
