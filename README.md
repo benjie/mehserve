@@ -14,6 +14,7 @@ start fresh.
 - Quick (near instant) startup
 - Built in DNS server to redirect *.meh, *.dev to 127.0.0.1 (requires
   additional configuration for your system to use this server)
+- [xip.io](http://xip.io/) support
 - Proxies regular HTTP requests and websocket connections based on the `Host`
   HTTP header
 - Extremely lean
@@ -61,8 +62,8 @@ To set up a subdomain, simply run
 
 `mehserve mysite 1337`
 
-This'll tell mehserve to proxy all requests for `http://mysite.dev/` to
-`http://localhost:1337`
+This'll tell mehserve to proxy all http requests for `mysite.dev`, `mysite.meh` 
+and  `mysite.*.*.*.*.xip.io` to `localhost:1337`.
 
 #### Static files
 
