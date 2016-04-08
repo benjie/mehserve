@@ -20,6 +20,7 @@ start fresh.
 - Easy to configure
 - Subdomain configuration is updated on a per-request basis - no need to
   restart server
+- supports [xip.io](http://xip.io/) domains
 
 ## Status
 
@@ -61,8 +62,8 @@ To set up a subdomain, simply run
 
 `mehserve mysite 1337`
 
-This'll tell mehserve to proxy all requests for `http://mysite.dev/` to
-`http://localhost:1337`
+This'll tell mehserve to proxy all HTTP requests for `mysite.dev`, `mysite.meh`
+and `mysite.*.*.*.*.xip.io` to `localhost:1337`
 
 #### Static files
 
