@@ -34,8 +34,8 @@ Mehserve itself should run on Linux and OS X, but to have .meh / .dev domains
 resolve to localhost and to have it run on port 80 you need to do a little
 additional configuration.
 
-We've currently only instructed you how to do this on OS X; pull requests
-welcome.
+We've currently only instructed you how to do this on OS X and Ubuntu; pull
+requests welcome.
 
 ### Installing
 
