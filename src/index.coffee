@@ -123,6 +123,10 @@ serve = (req, res, next) ->
 
 proxy = httpProxy.createProxyServer {host: "localhost", ws: true}
 
+proxy.on 'error', (e) ->
+  console.error "http-proxy emitted an error:"
+  console.error e.stack
+
 forward = (req, res, next) ->
   config = req.config
   port = config.port
