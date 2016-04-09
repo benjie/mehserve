@@ -29,8 +29,8 @@ if args[0] is "install"
         Please note that you will be responsible for undoing these changes should you wish to uninstall mehserve. We recommend running mehserve all the time using something like `pm2`.
 
           sudo apt-get install dnsmasq
-          echo -e "local=/dev/\naddress=/dev/127.0.0.1" | sudo tee /etc/dnsmasq.d/dev-tld
-          echo -e "local=/meh/\naddress=/meh/127.0.0.1" | sudo tee /etc/dnsmasq.d/meh-tld
+          echo -e "local=/dev/\\naddress=/dev/127.0.0.1" | sudo tee /etc/dnsmasq.d/dev-tld
+          echo -e "local=/meh/\\naddress=/meh/127.0.0.1" | sudo tee /etc/dnsmasq.d/meh-tld
           sudo service dnsmasq restart
           sudo iptables -t nat -A OUTPUT -o lo -p tcp --dport 80 -j REDIRECT --to-port 12439
           sudo iptables-save
