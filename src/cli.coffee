@@ -19,6 +19,8 @@ if args[0] is "install"
           sudo cp #{__dirname}/meh.resolver /etc/resolver/dev
           sudo cp #{__dirname}/meh.firewall.plist /Library/LaunchDaemons/meh.firewall.plist
           sudo launchctl load -w /Library/LaunchDaemons/meh.firewall.plist
+          cp #{__dirname}/meh.mehserve.plist ~/Library/LaunchAgents/meh.mehserve.plist
+          launchctl load ~/Library/LaunchAgents/meh.mehserve.plist
         """
     when "linux"
       console.log """
