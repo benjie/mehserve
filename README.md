@@ -84,4 +84,13 @@ updating to OS X 10.10.4
 
 - Tests
 - Daemonize
+- Scripts directory organzation
+```
+mehserve
+└── extras
+    ├── macos-launchd
+    ├── supervisord
+    ├── systemd
+    └── systemv
+```
 - Linux instructions
