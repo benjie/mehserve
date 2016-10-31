@@ -84,4 +84,14 @@ updating to OS X 10.10.4
 
 - Tests
 - Daemonize
+- Scripts directory organzation
+```
+mehserve
+└── extras
+    ├── macos-launchd
+    ├── supervisord
+    ├── systemd
+    └── systemv
+```
+- Homebrew (`node` formula dependency) [Homebrew CONTRIBUTING](https://github.com/caskroom/homebrew-cask/blob/master/CONTRIBUTING.md)
 - Linux instructions
