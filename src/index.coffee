@@ -7,6 +7,7 @@ httpProxy = require 'http-proxy'
 CONFIG_DIR="#{process.env.HOME}/.mehserve"
 HTML_DIR="#{__dirname}/html"
 PORT = process.env.PORT ? 12439
+DNS_PORT = process.env.DNS_PORT ? 15353
 SUFFIXES=[/\.dev$/i, /\.meh$/i, /(\.[0-9]+){2,4}\.xip\.io$/i]
 
 renderTemplate = (template, templateVariables = {}) ->
@@ -151,4 +152,4 @@ httpServer = server.listen PORT, ->
 httpServer.on 'upgrade', upgrade
 
 dnsServer = require './dnsserver'
-dnsServer.serve 15353
+dnsServer.serve DNS_PORT

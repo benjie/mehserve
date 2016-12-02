@@ -39,6 +39,11 @@ if args[0] is "install"
       console.log """
         mehserve is only tested on OS X and Ubuntu Linux, but you should be able to make it work on your platform by adding all your local .dev/.meh hostnames to your /etc/hosts (or equivalent) file, and redirecting port 12439 to port 80.
         """
+
+  console.log """
+
+        Please note that you can change the default HTTP port 12439, and DNS port 15353 by providing PORT and DNS_PORT environment varialbes, in which case you will also need to modify resolver and firewall files accordingly.
+        """
   # coffeelint: enable=max_line_length
 else if args[0] is "run"
   require './index'
