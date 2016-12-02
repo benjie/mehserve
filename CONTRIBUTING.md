@@ -14,11 +14,9 @@ abide by its terms.
 Contributor License Agreement
 -----------------------------
 
-This project is licensed under the [MIT license][License]. To protect all
-parties, we require contributors to sign the [Contributor License
-Agreement][CLA] - it's easy and painless, just requires your name and email
-address.
+This project is licensed under the [MIT license][License]. By contributing to
+this project you confirm that you license your contributions under this license
+too (and that you have the right to do so).
 
 [Code of Conduct]: CODE_OF_CONDUCT.md
-[CLA]: https://www.clahub.com/agreements/timecounts/mehserve
 [License]: LICENSE.md

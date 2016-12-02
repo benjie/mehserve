@@ -1,6 +1,6 @@
 {
   "name": "mehserve",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "A simple port-sharing proxy for development on multiple local domains, supports websockets",
   "main": "index.js",
   "bin": {
@@ -26,7 +26,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/timecounts/mehserve.git"
+    "url": "git+https://github.com/benjie/mehserve.git"
   },
   "keywords": [
     "dns",
@@ -42,7 +42,7 @@
     "alias"
   ],
   "bugs": {
-    "url": "https://github.com/timecounts/mehserve/issues"
+    "url": "https://github.com/benjie/mehserve/issues"
   },
-  "homepage": "https://github.com/timecounts/mehserve#readme"
+  "homepage": "https://github.com/benjie/mehserve#readme"
 }
