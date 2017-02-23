@@ -12,13 +12,18 @@ if args[0] is "install"
       console.log """
         We've detected you're running OS X. To get things up and running we need to set up the .meh and .dev DNS entries and a port forwarding firewall rule so mehserve takes over port 80 without requiring root privileges.
 
-        Please note that you will be responsible for undoing these changes should you wish to uninstall mehserve, and due to these changes you may get delays resolving DNS queries when mehserve is not running - we recommend running mehserve all the time using something like `pm2`.
+        Please note that you will be responsible for undoing these changes should you wish to uninstall mehserve, and due to these changes you may get delays resolving DNS queries when mehserve is not running.
 
           sudo mkdir -p /etc/resolver
           sudo cp #{__dirname}/meh.resolver /etc/resolver/meh
           sudo cp #{__dirname}/meh.resolver /etc/resolver/dev
           sudo cp #{__dirname}/meh.firewall.plist /Library/LaunchDaemons/meh.firewall.plist
           sudo launchctl load -w /Library/LaunchDaemons/meh.firewall.plist
+
+        We recommend running mehserve all the time using daemon manager. And if you follow the steps bellow you don't need to run `mehserve run` or using other daemon manager like `pm2`.
+
+          cp #{__dirname}/meh.mehserve.plist ~/Library/LaunchAgents/meh.mehserve.plist
+          launchctl load ~/Library/LaunchAgents/meh.mehserve.plist
         """
     when "linux"
       console.log """
