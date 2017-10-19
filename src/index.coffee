@@ -58,7 +58,7 @@ readConfig = (req, res, next) ->
   async.waterfall [
     # Determine host from header
     (done) ->
-      hostHeader = req.headers.host
+      hostHeader = req.headers.host || "localhost"
       host = hostHeader.split(':', 1)[0]
       for suffixRegexp in SUFFIXES
         if suffixRegexp.test(host)
