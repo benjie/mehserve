@@ -148,6 +148,12 @@ proxyWithExponentialBackoff = (req, res, next, attempts = 0) ->
     if !err
       return next()
     if req.method == 'GET' and attempts < EXPONENTIAL_MAXIMUM_ATTEMPTS
+      # To avoid memory leaks, we need to clear event listeners previously set
+      # via the proxy code:
+      # https://github.com/nodejitsu/node-http-proxy/blob/c979ba9f2cbb6988a210ca42bf59698545496723/lib/http-proxy/passes/web-incoming.js#L137-L143
+      req.removeAllListeners('aborted')
+      req.removeAllListeners('error')
+
       nextDelay = Math.min(
         EXPONENTIAL_MAXIMUM_DELAY,
         Math.ceil(1 + Math.random() * Math.pow(attempts, 2) * 10)
