@@ -44,5 +44,21 @@
   "bugs": {
     "url": "https://github.com/benjie/mehserve/issues"
   },
-  "homepage": "https://github.com/benjie/mehserve#readme"
+  "homepage": "https://github.com/benjie/mehserve#readme",
+  "files": [
+    "package.json",
+    "README.md",
+    "LICENSE.md",
+    "bin/mehserve",
+    "cli.js",
+    "cli.js.map",
+    "dnsserver.js",
+    "dnsserver.js.map",
+    "html/error.html",
+    "index.js",
+    "index.js.map",
+    "meh.firewall.plist",
+    "meh.mehserve.plist",
+    "meh.resolver"
+  ]
 }
