@@ -3,6 +3,9 @@ os = require 'os'
 
 CONFIG_DIR="#{process.env.HOME}/.mehserve"
 
+try
+  fs.mkdirSync(CONFIG_DIR)
+
 args = process.argv[2..]
 
 if args[0] is "install"
@@ -61,8 +64,8 @@ else
     Usage:
 
       mehserve install
-      mehserve run
-      mehserve [subdomain] [destination]
+      mehserve run [--exponential-backoff=25]
+      mehserve <subdomain> <destination>
 
     Destination can be a path or a port number.
     """

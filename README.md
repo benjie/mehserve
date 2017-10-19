@@ -21,6 +21,9 @@ start fresh.
 - Subdomain configuration is updated on a per-request basis - no need to
   restart server
 - supports [xip.io](http://xip.io/) domains
+- `mehserve run --exponential-backoff` will automatically re-attempt requests
+  when your development server restarts (e.g. due to file changes) saving
+  you from receiving the error page in the intervening seconds (ALPHA)
 
 ## Status
 

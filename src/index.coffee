@@ -9,6 +9,19 @@ HTML_DIR="#{__dirname}/html"
 PORT = process.env.PORT ? 12439
 DNS_PORT = process.env.DNS_PORT ? 15353
 SUFFIXES=[/\.dev$/i, /\.meh$/i, /(\.[0-9]+){2,4}\.xip\.io$/i]
+# Maximum number of attempts with exponential back-off
+EXPONENTIAL_MAXIMUM_ATTEMPTS = 25
+# Maximum delay between exponential back-off attempts
+EXPONENTIAL_MAXIMUM_DELAY = 2500
+
+useExponentialBackoff = false
+for arg in process.argv.slice(2)
+  matches = arg.match(/^--([a-z-]+)(?:=(.*))?$/)
+  if matches
+    if matches[1] == 'exponential-backoff'
+      useExponentialBackoff = true
+      EXPONENTIAL_MAXIMUM_ATTEMPTS = parseInt(matches[2]) || EXPONENTIAL_MAXIMUM_ATTEMPTS
+      console.log("Exponential backoff enabled, with #{EXPONENTIAL_MAXIMUM_ATTEMPTS} attempts")
 
 renderTemplate = (template, templateVariables = {}) ->
   template.replace /\{\{([a-zA-Z0-9_-]+)\}\}/g, (_, varName) ->
@@ -128,10 +141,29 @@ proxy.on 'error', (e) ->
   console.error "http-proxy emitted an error:"
   console.error e.stack
 
-forward = (req, res, next) ->
+proxyWithExponentialBackoff = (req, res, next, attempts = 0) ->
   config = req.config
   port = config.port
-  proxy.web req, res, {target: {port: port}}, handleError(req, res, next)
+  cb = (err) ->
+    if !err
+      return next()
+    if req.method == 'GET' and attempts < EXPONENTIAL_MAXIMUM_ATTEMPTS
+      nextDelay = Math.min(
+        EXPONENTIAL_MAXIMUM_DELAY,
+        Math.ceil(1 + Math.random() * Math.pow(attempts, 2) * 10)
+      )
+
+      setTimeout(
+        (-> proxyWithExponentialBackoff(req, res, next, attempts + 1)),
+        nextDelay
+      )
+    else
+      handleError(req, res, next)(err)
+
+  proxy.web req, res, {target: {port: port}}, cb
+
+forward = (req, res, next) ->
+  proxyWithExponentialBackoff(req, res, next, if useExponentialBackoff then 0 else EXPONENTIAL_MAXIMUM_ATTEMPTS)
 
 upgrade = (req, socket, head) ->
   readConfig req, null, (err) ->
