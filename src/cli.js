@@ -10,7 +10,6 @@ try {
 const args = process.argv.slice(2);
 
 if (args[0] === "install") {
-  // coffeelint: disable=max_line_length
   switch (os.platform()) {
     case "darwin":
       console.log(`\
@@ -60,7 +59,6 @@ mehserve is only tested on OS X and Ubuntu Linux, but you should be able to make
 Please note that you can change the default HTTP port 12439, and DNS port 15353 by providing PORT and DNS_PORT environment varialbes, in which case you will also need to modify resolver and firewall files accordingly.\
 `
   );
-  // coffeelint: enable=max_line_length
 } else if (args[0] === "run") {
   require('./index');
 } else if (args.length === 2) {

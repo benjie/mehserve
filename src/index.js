@@ -1,11 +1,3 @@
-/*
- * decaffeinate suggestions:
- * DS101: Remove unnecessary use of Array.from
- * DS102: Remove unnecessary code created because of implicit returns
- * DS202: Simplify dynamic range loops
- * DS207: Consider shorter variations of null checks
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
 const async = require('async');
 const express = require('express');
 const fs = require('fs');
@@ -14,8 +6,8 @@ const {version} = require('./package');
 
 const CONFIG_DIR=`${process.env.HOME}/.mehserve`;
 const HTML_DIR=`${__dirname}/html`;
-const PORT = process.env.PORT != null ? process.env.PORT : 12439;
-const DNS_PORT = process.env.DNS_PORT != null ? process.env.DNS_PORT : 15353;
+const PORT = process.env.PORT ? process.env.PORT : 12439;
+const DNS_PORT = process.env.DNS_PORT ? process.env.DNS_PORT : 15353;
 const SUFFIXES=[/\.dev$/i, /\.meh$/i, /(\.[0-9]+){2,4}\.xip\.io$/i];
 // Maximum number of attempts with exponential back-off
 let EXPONENTIAL_MAXIMUM_ATTEMPTS = 25;
@@ -23,7 +15,7 @@ let EXPONENTIAL_MAXIMUM_ATTEMPTS = 25;
 const EXPONENTIAL_MAXIMUM_DELAY = 2500;
 
 let useExponentialBackoff = false;
-for (let arg of Array.from(process.argv.slice(2))) {
+for (let arg of process.argv.slice(2)) {
   const matches = arg.match(/^--([a-z-]+)(?:=(.*))?$/);
   if (matches) {
     if (matches[1] === 'exponential-backoff') {
@@ -66,7 +58,7 @@ const handleError = (req, res, next) =>
     });
     res.setHeader('Content-Type', 'text/html; charset=UTF-8');
     res.setHeader('Content-Length', content.length);
-    return res.end(content);
+    res.end(content);
   }
 ;
 
@@ -76,29 +68,29 @@ const readConfig = (req, res, next) =>
     function(done) {
       const hostHeader = req.headers.host || "localhost";
       let host = hostHeader.split(':', 1)[0];
-      for (let suffixRegexp of Array.from(SUFFIXES)) {
+      for (let suffixRegexp of SUFFIXES) {
         if (suffixRegexp.test(host)) {
           host = host.replace(suffixRegexp, "");
           break;
         }
       }
-      return done(null, host);
+      done(null, host);
     },
 
     // Determine which config to use
     function(host, done) {
       const split = host.split(".");
       const options = [];
-      for (let i = 0, end = split.length, asc = 0 <= end; asc ? i < end : i > end; asc ? i++ : i--) {
+      for (let i = 0, end = split.length; i < end; i++) {
         options.push(split.slice(split.length - i - 1).join("."));
       }
       options.push("default");
       const exists = (option, done) => fs.exists(`${CONFIG_DIR}/${option}`, done);
-      return async.detectSeries(options, exists, function(configName) {
-        if (configName) { return done(null, configName); }
+      async.detectSeries(options, exists, function(configName) {
+        if (configName) { done(null, configName); return; }
         const err = new Error("Configuration not found");
         err.code = 500;
-        return done(err);
+        done(err);
       });
     },
 
@@ -136,28 +128,29 @@ const readConfig = (req, res, next) =>
           }
         }
       }
-      return done(null, config);
+      done(null, config);
     }
 
   ], function(error, config) {
     if (error) {
-      return handleError(req, res, next)(error);
+      handleError(req, res, next)(error);
+      return;
     }
     req.config = config;
-    return next();
+    next();
   })
 ;
 
 const handle = function(req, res, next) {
   if (req.config.type === 'port') {
-    return forward(req, res, next);
+    forward(req, res, next);
   } else if (req.config.type === 'static') {
-    return serve(req, res, next);
+    serve(req, res, next);
   } else {
     const err = new Error("Config not understood");
     err.code = 500;
     err.meta = req.config;
-    return next(err);
+    next(err);
   }
 };
 
@@ -166,7 +159,7 @@ var serve = function(req, res, next) {
   const { config } = req;
   const { path } = config;
   if (staticMiddlewares[path] == null) { staticMiddlewares[path] = express.static(path); }
-  return staticMiddlewares[path](req, res, next);
+  staticMiddlewares[path](req, res, next);
 };
 
 
@@ -174,7 +167,7 @@ const proxy = httpProxy.createProxyServer({host: "localhost", ws: true});
 
 proxy.on('error', function(e) {
   console.error("http-proxy emitted an error:");
-  return console.error(e.stack);
+  console.error(e.stack);
 });
 
 var proxyWithExponentialBackoff = function(req, res, next, attempts) {
@@ -183,9 +176,8 @@ var proxyWithExponentialBackoff = function(req, res, next, attempts) {
   const { port } = config;
   const cb = function(err) {
     if (!err) {
-      return next();
-    }
-    if ((req.method === 'GET') && (attempts < EXPONENTIAL_MAXIMUM_ATTEMPTS)) {
+      next();
+    } else if ((req.method === 'GET') && (attempts < EXPONENTIAL_MAXIMUM_ATTEMPTS)) {
       // To avoid memory leaks, we need to clear event listeners previously set
       // via the proxy code:
       // https://github.com/nodejitsu/node-http-proxy/blob/c979ba9f2cbb6988a210ca42bf59698545496723/lib/http-proxy/passes/web-incoming.js#L137-L143
@@ -197,26 +189,26 @@ var proxyWithExponentialBackoff = function(req, res, next, attempts) {
         Math.ceil(1 + (Math.random() * Math.pow(attempts, 2) * 10))
       );
 
-      return setTimeout(
+      setTimeout(
         (() => proxyWithExponentialBackoff(req, res, next, attempts + 1)),
         nextDelay
       );
     } else {
-      return handleError(req, res, next)(err);
+      handleError(req, res, next)(err);
     }
   };
 
-  return proxy.web(req, res, {target: {port}}, cb);
+  proxy.web(req, res, {target: {port}}, cb);
 };
 
-var forward = (req, res, next) => proxyWithExponentialBackoff(req, res, next, useExponentialBackoff ? 0 : EXPONENTIAL_MAXIMUM_ATTEMPTS);
+var forward = (req, res, next) => {proxyWithExponentialBackoff(req, res, next, useExponentialBackoff ? 0 : EXPONENTIAL_MAXIMUM_ATTEMPTS);}
 
 const upgrade = (req, socket, head) =>
   readConfig(req, null, function(err) {
-    if (err) { return socket.close(); }
+    if (err) { socket.close(); return; }
     const { config } = req;
     const { port } = config;
-    return proxy.ws(req, socket, head, {target: {port}});
+    proxy.ws(req, socket, head, {target: {port}});
 })
 ;
 
@@ -227,7 +219,7 @@ server.use(handle);
 
 var httpServer = server.listen(PORT, function() {
   const { port } = httpServer.address();
-  return console.log(`mehserve v${version} listening on port ${port}`);
+  console.log(`mehserve v${version} listening on port ${port}`);
 });
 
 httpServer.on('upgrade', upgrade);

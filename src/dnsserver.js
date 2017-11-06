@@ -1,8 +1,3 @@
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
 const dns = require('native-dns');
 
 const server = dns.createServer();
@@ -21,7 +16,7 @@ server.on('request', function(req, res) {
       ttl: 600
     })
     );
-    return res.send();
+    res.send();
   }
 });
 
