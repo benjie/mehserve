@@ -1,3 +1,4 @@
 *.map
 node_modules/**
 /*.js
+!/.eslintrc.js
