@@ -1,11 +1,13 @@
-const fs = require('fs');
-const os = require('os');
+const fs = require("fs");
+const os = require("os");
 
-const CONFIG_DIR=`${process.env.HOME}/.mehserve`;
+const CONFIG_DIR = `${process.env.HOME}/.mehserve`;
 
 try {
   fs.mkdirSync(CONFIG_DIR);
-} catch (error) {}
+} catch (error) {
+  // It probably already exists; ignore.
+}
 
 const args = process.argv.slice(2);
 
@@ -27,8 +29,7 @@ We recommend running mehserve all the time using daemon manager. And if you foll
 
   cp ${__dirname}/meh.mehserve.plist ~/Library/LaunchAgents/meh.mehserve.plist
   launchctl load ~/Library/LaunchAgents/meh.mehserve.plist\
-`
-      );
+`);
       break;
     case "linux":
       console.log(`\
@@ -44,23 +45,20 @@ Please note that you will be responsible for undoing these changes should you wi
   sudo service dnsmasq restart
   sudo iptables -t nat -A OUTPUT -o lo -p tcp --dport 80 -j REDIRECT --to-port 12439
   sudo iptables-save\
-`
-      );
+`);
       break;
     default:
       console.log(`\
 mehserve is only tested on OS X and Ubuntu Linux, but you should be able to make it work on your platform by adding all your local .dev/.meh hostnames to your /etc/hosts (or equivalent) file, and redirecting port 12439 to port 80.\
-`
-      );
+`);
   }
 
   console.log(`\
 
 Please note that you can change the default HTTP port 12439, and DNS port 15353 by providing PORT and DNS_PORT environment varialbes, in which case you will also need to modify resolver and firewall files accordingly.\
-`
-  );
+`);
 } else if (args[0] === "run") {
-  require('./index');
+  require("./index");
 } else if (args.length === 2) {
   const configName = args[0];
   const path = `${CONFIG_DIR}/${configName}`;
@@ -74,6 +72,5 @@ Usage:
   mehserve <subdomain> <destination>
 
 Destination can be a path or a port number.\
-`
-  );
+`);
 }
