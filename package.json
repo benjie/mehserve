@@ -7,9 +7,9 @@
     "mehserve": "./bin/mehserve"
   },
   "scripts": {
-    "prepublish": "coffee -cbmo . src",
+    "prepublish": "babel src --out-dir . --source-maps",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "coffee -cwbmo . src"
+    "watch": "babel src --out-dir . --source-maps --watch"
   },
   "author": "Benjie Gillam <code@benjiegillam.com>",
   "license": "MIT",
@@ -59,6 +59,7 @@
   ],
   "devDependencies": {
     "babel": "6.23.0",
+    "babel-cli": "6.26.0",
     "babel-eslint": "8.0.1",
     "eslint": "4.10.0",
     "eslint-config-prettier": "2.7.0",
