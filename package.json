@@ -7,22 +7,18 @@
     "mehserve": "./bin/mehserve"
   },
   "scripts": {
-    "prepublish": "coffee -cbmo . src",
+    "prepublish": "babel src --out-dir . --source-maps",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "coffee -cwbmo . src"
+    "watch": "babel src --out-dir . --source-maps --watch"
   },
   "author": "Benjie Gillam <code@benjiegillam.com>",
   "license": "MIT",
   "dependencies": {
     "async": "^1.2.1",
-    "coffee-script": "1.10.0",
     "express": "^4.13.0",
     "http-proxy": "^1.11.1",
     "native-dns": "^0.7.0",
     "request": "^2.58.0"
-  },
-  "devDependencies": {
-    "coffee-script": "^1.9.3"
   },
   "repository": {
     "type": "git",
@@ -60,5 +56,15 @@
     "meh.firewall.plist",
     "meh.mehserve.plist",
     "meh.resolver"
-  ]
+  ],
+  "devDependencies": {
+    "babel": "6.23.0",
+    "babel-cli": "6.26.0",
+    "babel-eslint": "8.0.1",
+    "eslint": "4.10.0",
+    "eslint-config-prettier": "2.7.0",
+    "eslint-plugin-prettier": "2.3.1",
+    "eslint_d": "5.1.0",
+    "prettier": "1.7.4"
+  }
 }
