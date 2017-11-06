@@ -54,6 +54,8 @@
     "html/error.html",
     "index.js",
     "index.js.map",
+    "ssl.js",
+    "ssl.js.map",
     "meh.firewall.plist",
     "meh.mehserve.plist",
     "meh.resolver"
