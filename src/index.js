@@ -265,9 +265,21 @@ const secureContextContainerCache = {};
 const MAX_SSL_CACHE_AGE_IN_MILLISECONDS = 1000 * 30;
 
 async function createSecureContext(servername) {
+  let host = servername.split(":", 1)[0];
+  if (!await fsP.exists(`${CONFIG_DIR}/${host}.ssl.key`)) {
+    for (let suffixRegexp of SUFFIXES) {
+      if (suffixRegexp.test(host)) {
+        const shorterHost = host.replace(suffixRegexp, "");
+        if (await fsP.exists(`${CONFIG_DIR}/${shorterHost}.ssl.key`)) {
+          host = shorterHost;
+          break;
+        }
+      }
+    }
+  }
   const [key, cert] = await Promise.all([
-    fsP.readFile(`${CONFIG_DIR}/${servername}.ssl.key`, "utf8"),
-    fsP.readFile(`${CONFIG_DIR}/${servername}.ssl.crt`, "utf8"),
+    fsP.readFile(`${CONFIG_DIR}/${host}.ssl.key`, "utf8"),
+    fsP.readFile(`${CONFIG_DIR}/${host}.ssl.crt`, "utf8"),
   ]);
   const context = tls.createSecureContext({
     key,
