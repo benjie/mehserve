@@ -3,10 +3,13 @@ const express = require("express");
 const fs = require("fs");
 const httpProxy = require("http-proxy");
 const { version } = require("./package");
+const http = require("http");
+const https = require("https");
 
 const CONFIG_DIR = `${process.env.HOME}/.mehserve`;
 const HTML_DIR = `${__dirname}/html`;
 const PORT = process.env.PORT ? process.env.PORT : 12439;
+const SSL_PORT = process.env.SSL_PORT ? process.env.SSL_PORT : 12443;
 const DNS_PORT = process.env.DNS_PORT ? process.env.DNS_PORT : 15353;
 const SUFFIXES = [/\.dev$/i, /\.meh$/i, /(\.[0-9]+){2,4}\.xip\.io$/i];
 // Maximum number of attempts with exponential back-off
@@ -250,12 +253,19 @@ const server = express();
 server.use(readConfig);
 server.use(handle);
 
-var httpServer = server.listen(PORT, function() {
+var httpServer = http.createServer(server);
+httpServer.listen(PORT, function() {
   const { port } = httpServer.address();
   console.log(`mehserve v${version} listening on port ${port}`);
 });
+var httpsServer = https.createServer({}, server);
+httpsServer.listen(SSL_PORT, function() {
+  const { port } = httpsServer.address();
+  console.log(`mehserve v${version} (SSL) listening on port ${port}`);
+});
 
 httpServer.on("upgrade", upgrade);
+httpsServer.on("upgrade", upgrade);
 
 const dnsServer = require("./dnsserver");
 dnsServer.serve(DNS_PORT);
