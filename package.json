@@ -1,6 +1,6 @@
 {
   "name": "mehserve",
-  "version": "1.1.4",
+  "version": "2.0.0-1",
   "description": "A simple port-sharing proxy for development on multiple local domains, supports websockets",
   "main": "index.js",
   "bin": {
@@ -17,6 +17,7 @@
     "async": "^1.2.1",
     "express": "^4.13.0",
     "http-proxy": "^1.11.1",
+    "mz": "2.7.0",
     "native-dns": "^0.7.0",
     "request": "^2.58.0"
   },
@@ -53,6 +54,8 @@
     "html/error.html",
     "index.js",
     "index.js.map",
+    "ssl.js",
+    "ssl.js.map",
     "meh.firewall.plist",
     "meh.mehserve.plist",
     "meh.resolver"

@@ -1,12 +1,17 @@
 const async = require("async");
 const express = require("express");
-const fs = require("fs");
 const httpProxy = require("http-proxy");
 const { version } = require("./package");
+const http = require("http");
+const https = require("https");
+const fs = require("fs");
+const fsP = require("mz/fs");
+const tls = require("tls");
 
 const CONFIG_DIR = `${process.env.HOME}/.mehserve`;
 const HTML_DIR = `${__dirname}/html`;
 const PORT = process.env.PORT ? process.env.PORT : 12439;
+const SSL_PORT = process.env.SSL_PORT ? process.env.SSL_PORT : 12443;
 const DNS_PORT = process.env.DNS_PORT ? process.env.DNS_PORT : 15353;
 const SUFFIXES = [/\.dev$/i, /\.meh$/i, /(\.[0-9]+){2,4}\.xip\.io$/i];
 // Maximum number of attempts with exponential back-off
@@ -40,6 +45,10 @@ const renderTemplate = function(template, templateVariables) {
   );
 };
 
+const errorMessages = {
+  403: "Permission Denied",
+};
+
 const handleError = (req, res, _next) =>
   function(error) {
     let title = null;
@@ -52,8 +61,8 @@ const handleError = (req, res, _next) =>
         message = `Looks like you forgot to run server on port ${error.port}!`;
         break;
       default:
-        code = 500;
-        title = "Internal Server Error";
+        code = error.code || 500;
+        title = errorMessages[code] || `Internal Server Error`;
         message = error.message || "Something bad happened!";
     }
 
@@ -91,6 +100,12 @@ const readConfig = (req, res, next) =>
 
       // Determine which config to use
       function(host, done) {
+        if (host.match(/\.ssl\.(crt|key)$/i)) {
+          const err = new Error(`Access forbidden to host '${host}'`);
+          err.code = 403;
+          done(err);
+          return;
+        }
         const split = host.split(".");
         const options = [];
         for (let i = 0, end = split.length; i < end; i++) {
@@ -104,7 +119,7 @@ const readConfig = (req, res, next) =>
             done(null, configName);
             return;
           }
-          const err = new Error("Configuration not found");
+          const err = new Error(`Configuration not found for host '${host}'`);
           err.code = 500;
           done(err);
         });
@@ -246,16 +261,79 @@ const upgrade = (req, socket, head) =>
     proxy.ws(req, socket, head, { target: { port } });
   });
 
+const secureContextContainerCache = {};
+const MAX_SSL_CACHE_AGE_IN_MILLISECONDS = 1000 * 30;
+
+async function createSecureContext(servername) {
+  const [key, cert] = await Promise.all([
+    fsP.readFile(`${CONFIG_DIR}/${servername}.ssl.key`, "utf8"),
+    fsP.readFile(`${CONFIG_DIR}/${servername}.ssl.crt`, "utf8"),
+  ]);
+  const context = tls.createSecureContext({
+    key,
+    cert,
+  });
+  secureContextContainerCache[servername] = {
+    context,
+    createdAt: Date.now(),
+  };
+  return context;
+}
+
+async function getSecureContext(servername) {
+  const contextContainer = secureContextContainerCache[servername];
+  const isValid = contextContainer =>
+    contextContainer.createdAt > Date.now() - MAX_SSL_CACHE_AGE_IN_MILLISECONDS;
+  if (contextContainer && isValid(contextContainer)) {
+    return contextContainer.context;
+  }
+  if (contextContainer) {
+    // Give ourselves a minute to create a new context, let old requests continue in the mean time.
+    contextContainer.createdAt = Date.now() + 60 * 1000;
+    createSecureContext(servername).then(null, e => {
+      console.error(`Could not generate secure context for '${servername}'`);
+      console.error(e);
+    });
+    return contextContainer.context;
+  } else {
+    return createSecureContext(servername);
+  }
+}
+
 const server = express();
 server.use(readConfig);
 server.use(handle);
 
-var httpServer = server.listen(PORT, function() {
+var httpServer = http.createServer(server);
+httpServer.listen(PORT, function() {
   const { port } = httpServer.address();
   console.log(`mehserve v${version} listening on port ${port}`);
 });
+var httpsServer = https.createServer(
+  {
+    async SNICallback(servername, cb) {
+      let ctx, err;
+      try {
+        ctx = await getSecureContext(servername);
+      } catch (e) {
+        console.error(
+          `Could not generate secure context for server '${servername}': ${e.message}`
+        );
+        err = e;
+      } finally {
+        cb(err, ctx);
+      }
+    },
+  },
+  server
+);
+httpsServer.listen(SSL_PORT, function() {
+  const { port } = httpsServer.address();
+  console.log(`mehserve v${version} (SSL) listening on port ${port}`);
+});
 
 httpServer.on("upgrade", upgrade);
+httpsServer.on("upgrade", upgrade);
 
 const dnsServer = require("./dnsserver");
 dnsServer.serve(DNS_PORT);

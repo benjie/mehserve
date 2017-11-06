@@ -13,7 +13,7 @@
                 <string>/bin/sh</string>
                 <string>-c</string>
                 <string>
-                  echo "rdr pass proto tcp from any to any port 80 -> 127.0.0.1 port 12439" | pfctl -a "com.apple/250.ApplicationFirewall" -f - -E
+                  (echo "rdr pass proto tcp from any to any port 80 -> 127.0.0.1 port 12439"; echo "rdr pass proto tcp from any to any port 443 -> 127.0.0.1 port 12443") | pfctl -a "com.apple/250.ApplicationFirewall" -f - -E
                 </string>
         </array>
         <key>RunAtLoad</key>
