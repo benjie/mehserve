@@ -45,6 +45,10 @@ const renderTemplate = function(template, templateVariables) {
   );
 };
 
+const errorMessages = {
+  403: "Permission Denied",
+};
+
 const handleError = (req, res, _next) =>
   function(error) {
     let title = null;
@@ -57,8 +61,8 @@ const handleError = (req, res, _next) =>
         message = `Looks like you forgot to run server on port ${error.port}!`;
         break;
       default:
-        code = 500;
-        title = "Internal Server Error";
+        code = error.code || 500;
+        title = errorMessages[code] || `Internal Server Error`;
         message = error.message || "Something bad happened!";
     }
 
@@ -96,6 +100,12 @@ const readConfig = (req, res, next) =>
 
       // Determine which config to use
       function(host, done) {
+        if (host.match(/\.ssl\.(crt|key)$/i)) {
+          const err = new Error(`Access forbidden to host '${host}'`);
+          err.code = 403;
+          done(err);
+          return;
+        }
         const split = host.split(".");
         const options = [];
         for (let i = 0, end = split.length; i < end; i++) {
