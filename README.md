@@ -1,13 +1,9 @@
 # mehserve
 
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/benjie)
+
 A simple port-sharing proxy for development on multiple local domains, supports
-websockets.
-
-## Inspiration
-
-Inspired by basecamp's pow.cx server, we wanted something that also supported
-websockets. Pow's codebase is significantly out of date so it was easier to
-start fresh.
+websockets, SSL, and queuing requests whilst development server restarts.
 
 ## Features
 
@@ -16,20 +12,21 @@ start fresh.
   additional configuration for your system to use this server)
 - Proxies regular HTTP requests and websocket connections based on the `Host`
   HTTP header
-- Extremely lean
 - Easy to configure
 - Subdomain configuration is updated on a per-request basis - no need to
   restart server
 - supports [xip.io](http://xip.io/) domains
+- SSL termination (using SNI to support multiple domains on one port)
+- Self-signed SSL certificate generation and help installing
 - `mehserve run --exponential-backoff` will automatically re-attempt requests
   when your development server restarts (e.g. due to file changes) saving
   you from receiving the error page in the intervening seconds (ALPHA)
 
 ## Status
 
-This is a work in progress. It does not have pretty errors, and it's a bit
-frustrating to configure, especially if you've previously had basecamp's pow
-installed.
+I've been using this for a couple years now, it's been very smooth for me.
+YMMV. This is NOT for production usage, it's only intended for use on your own
+development machine!
 
 ## Getting Started
 
@@ -55,7 +52,12 @@ To run the server:
 
 `mehserve run`
 
-(we don't currently daemonize the server, pull requests welcome)
+We don't currently daemonize the server, pull requests to add this
+functionality would be welcome. In the mean time we recommend you [set up
+`pm2`](http://pm2.keymetrics.io/docs/usage/quick-start/) and then tell it to
+run mehserve with:
+
+`pm2 run /path/to/mehserve -- run --exponential-backoff && pm2 dump`
 
 ### Configuring subdomains
 
@@ -63,7 +65,7 @@ To run the server:
 
 To set up a subdomain, simply run
 
-`mehserve mysite 1337`
+`mehserve add mysite 1337`
 
 This'll tell mehserve to proxy all HTTP requests for `mysite.dev`, `mysite.meh`
 and `mysite.*.*.*.*.xip.io` to `localhost:1337`
@@ -72,10 +74,19 @@ and `mysite.*.*.*.*.xip.io` to `localhost:1337`
 
 Alternatively, to serve static files:
 
-`mehserve staticsite /path/to/public`
+`mehserve add staticsite /path/to/public`
 
 This'll tell mehserve to serve static content from `/path/to/public/` to anyone
 requesting `http://staticsite.dev/`
+
+#### SSL certificates
+
+If you want a local domain to be served with SSL you must generate a
+certificate for it:
+
+`mehserve ssl staticsite`
+
+Then follow the instructions.
 
 #### DNS resolution fails whilst offline
 
@@ -84,6 +95,8 @@ https://github.com/basecamp/pow/issues/471) - should be fixed by
 updating to OS X 10.10.4
 
 ## TODO
+
+Pull requests welcome!
 
 - Tests
 - Daemonize

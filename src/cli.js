@@ -75,9 +75,28 @@ Please note that you can change the default HTTP port 12439, HTTPS port 12443, a
 Usage:
 
   mehserve install
-  mehserve run [--exponential-backoff=25]
-  mehserve <subdomain> <destination>
 
-Destination can be a path or a port number.\
+    Outputs instructions to install mehserve.
+
+
+  mehserve run [--exponential-backoff=25]
+
+    Runs mehserve's HTTP, HTTPS and DNS servers.
+    (With --exponential-backoff, in the event that your server goes down mehserve will queue your request and retry a few times rather than just outputting an error message.)
+    It's advised that you run mehserve at all times using something like pm2, e.g. with \`pm2 start mehserve -- run && pm2 dump\`
+
+
+  mehserve ssl <subdomain>
+
+    Provisions a self-signed SSL certificate for <subdomain> (using \`openssl\`) and prompts you to install it.
+
+
+  mehserve add <subdomain> <destination>
+
+    Tells mehserve to respond to request for <subdomain> by:
+    - if <destination> is a number then proxying to that port number
+    - if <destination> is a path then by serving that folder as static content
+
+\
 `);
 }
