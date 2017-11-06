@@ -4,7 +4,8 @@ const httpProxy = require("http-proxy");
 const { version } = require("./package");
 const http = require("http");
 const https = require("https");
-const fs = require("fs-extra");
+const fs = require("fs");
+const fsP = require("mz/fs");
 const tls = require("tls");
 
 const CONFIG_DIR = `${process.env.HOME}/.mehserve`;
@@ -108,7 +109,7 @@ const readConfig = (req, res, next) =>
             done(null, configName);
             return;
           }
-          const err = new Error("Configuration not found");
+          const err = new Error(`Configuration not found for host '${host}'`);
           err.code = 500;
           done(err);
         });
@@ -255,8 +256,8 @@ const MAX_SSL_CACHE_AGE_IN_MILLISECONDS = 1000 * 30;
 
 async function createSecureContext(servername) {
   const [key, cert] = await Promise.all([
-    fs.readFile(`${CONFIG_DIR}/${servername}.ssl.key`, "utf8"),
-    fs.readFile(`${CONFIG_DIR}/${servername}.ssl.crt`, "utf8"),
+    fsP.readFile(`${CONFIG_DIR}/${servername}.ssl.key`, "utf8"),
+    fsP.readFile(`${CONFIG_DIR}/${servername}.ssl.crt`, "utf8"),
   ]);
   const context = tls.createSecureContext({
     key,

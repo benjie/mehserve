@@ -1,5 +1,6 @@
 const fs = require("fs");
 const os = require("os");
+const { createSSLCertificateFor } = require("./ssl");
 
 const CONFIG_DIR = `${process.env.HOME}/.mehserve`;
 
@@ -59,10 +60,15 @@ Please note that you can change the default HTTP port 12439, and DNS port 15353 
 `);
 } else if (args[0] === "run") {
   require("./index");
-} else if (args.length === 2) {
-  const configName = args[0];
+} else if (args[0] === "ssl") {
+  createSSLCertificateFor(args[1]).then(null, e => {
+    console.error(e);
+    process.exit(1);
+  });
+} else if ((args.length === 3 && args[0] === "add") || args.length === 2) {
+  const configName = args[args.length - 2];
   const path = `${CONFIG_DIR}/${configName}`;
-  fs.writeFileSync(path, args[1]);
+  fs.writeFileSync(path, args[args.length - 1]);
 } else {
   console.log(`\
 Usage:

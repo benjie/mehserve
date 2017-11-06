@@ -16,8 +16,8 @@
   "dependencies": {
     "async": "^1.2.1",
     "express": "^4.13.0",
-    "fs-extra": "4.0.2",
     "http-proxy": "^1.11.1",
+    "mz": "2.7.0",
     "native-dns": "^0.7.0",
     "request": "^2.58.0"
   },
