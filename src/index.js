@@ -1,10 +1,11 @@
 const async = require("async");
 const express = require("express");
-const fs = require("fs");
 const httpProxy = require("http-proxy");
 const { version } = require("./package");
 const http = require("http");
 const https = require("https");
+const fs = require("fs-extra");
+const tls = require("tls");
 
 const CONFIG_DIR = `${process.env.HOME}/.mehserve`;
 const HTML_DIR = `${__dirname}/html`;
@@ -249,6 +250,45 @@ const upgrade = (req, socket, head) =>
     proxy.ws(req, socket, head, { target: { port } });
   });
 
+const secureContextContainerCache = {};
+const MAX_SSL_CACHE_AGE_IN_MILLISECONDS = 1000 * 30;
+
+async function createSecureContext(servername) {
+  const [key, cert] = await Promise.all([
+    fs.readFile(`${CONFIG_DIR}/${servername}.ssl.key`, "utf8"),
+    fs.readFile(`${CONFIG_DIR}/${servername}.ssl.crt`, "utf8"),
+  ]);
+  const context = tls.createSecureContext({
+    key,
+    cert,
+  });
+  secureContextContainerCache[servername] = {
+    context,
+    createdAt: Date.now(),
+  };
+  return context;
+}
+
+async function getSecureContext(servername) {
+  const contextContainer = secureContextContainerCache[servername];
+  const isValid = contextContainer =>
+    contextContainer.createdAt > Date.now() - MAX_SSL_CACHE_AGE_IN_MILLISECONDS;
+  if (contextContainer && isValid(contextContainer)) {
+    return contextContainer.context;
+  }
+  if (contextContainer) {
+    // Give ourselves a minute to create a new context, let old requests continue in the mean time.
+    contextContainer.createdAt = Date.now() + 60 * 1000;
+    createSecureContext(servername).then(null, e => {
+      console.error(`Could not generate secure context for '${servername}'`);
+      console.error(e);
+    });
+    return contextContainer.context;
+  } else {
+    return createSecureContext(servername);
+  }
+}
+
 const server = express();
 server.use(readConfig);
 server.use(handle);
@@ -258,7 +298,24 @@ httpServer.listen(PORT, function() {
   const { port } = httpServer.address();
   console.log(`mehserve v${version} listening on port ${port}`);
 });
-var httpsServer = https.createServer({}, server);
+var httpsServer = https.createServer(
+  {
+    async SNICallback(servername, cb) {
+      let ctx, err;
+      try {
+        ctx = await getSecureContext(servername);
+      } catch (e) {
+        console.error(
+          `Could not generate secure context for server '${servername}': ${e.message}`
+        );
+        err = e;
+      } finally {
+        cb(err, ctx);
+      }
+    },
+  },
+  server
+);
 httpsServer.listen(SSL_PORT, function() {
   const { port } = httpsServer.address();
   console.log(`mehserve v${version} (SSL) listening on port ${port}`);
