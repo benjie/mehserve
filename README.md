@@ -128,3 +128,8 @@ Pull requests welcome!
       └── systemv
   ```
 - Homebrew (`node` formula dependency) [Homebrew CONTRIBUTING](https://github.com/caskroom/homebrew-cask/blob/master/CONTRIBUTING.md)
+
+
+### Removing old .dev TLD
+
+As .dev is now a valid TLD we no longer use it as the domain extension. If you have installed an older version of mehserve you can remove resolving of the .dev domain by mehserve by running `sudo rm /etc/resolver/dev` from a terminal.
