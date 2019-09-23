@@ -8,6 +8,8 @@
   },
   "scripts": {
     "prepublish": "babel src --out-dir . --source-maps",
+    "lint": "eslint .",
+    "lint:fix": "yarn run lint --fix && prettier --write '**/*.{md,json,html}'",
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "babel src --out-dir . --source-maps --watch"
   },
