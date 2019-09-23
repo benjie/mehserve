@@ -60,10 +60,17 @@ const handleError = (req, res, _next) =>
         title = "Bad Gateway";
         message = `Looks like you forgot to run server on port ${error.port}!`;
         break;
-      default:
-        code = error.code || 500;
+      default: {
+        const errorCodeAsInt = error.code
+          ? parseInt(String(error.code), 10)
+          : null;
+        code =
+          errorCodeAsInt && errorCodeAsInt >= 400 && errorCodeAsInt < 600
+            ? errorCodeAsInt
+            : 500;
         title = errorMessages[code] || `Internal Server Error`;
         message = error.message || "Something bad happened!";
+      }
     }
 
     res.statusCode = code;
