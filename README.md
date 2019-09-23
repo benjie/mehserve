@@ -26,7 +26,7 @@ was originally a joke... Hopefully no-one registers the `.meh` TLD!
 ## Features ✨
 
 - Quick (near instant) startup
-- Built in DNS server to redirect _.meh, _.dev to 127.0.0.1 (requires
+- Built in DNS server to redirect \_.meh to 127.0.0.1 (requires
   additional configuration for your system to use this server)
 - Proxies regular HTTP requests and websocket connections based on the `Host`
   HTTP header
@@ -48,7 +48,7 @@ production usage, it's only intended for use on your own development machine!
 
 ## Getting Started 🚀
 
-Mehserve itself should run on Linux and OS X, but to have .meh / .dev domains
+Mehserve itself should run on Linux and OS X, but to have .meh domains
 resolve to localhost and to have it run on port 80 you need to do a little
 additional configuration.
 
@@ -85,7 +85,7 @@ To set up a subdomain, simply run
 
 `mehserve add mysite 1337`
 
-This'll tell mehserve to proxy all HTTP requests for `mysite.dev`, `mysite.meh`
+This'll tell mehserve to proxy all HTTP requests for `mysite.meh`
 and `mysite.*.*.*.*.xip.io` to `localhost:1337`
 
 #### Static files 📄
