@@ -15,11 +15,11 @@
   "license": "MIT",
   "dependencies": {
     "async": "^1.2.1",
-    "express": "^4.13.0",
-    "http-proxy": "^1.11.1",
+    "express": "^4.17.1",
+    "http-proxy": "^1.18.0",
     "mz": "2.7.0",
     "native-dns": "^0.7.0",
-    "request": "^2.58.0"
+    "request": "^2.88.0"
   },
   "repository": {
     "type": "git",
