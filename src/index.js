@@ -38,7 +38,7 @@ const renderTemplate = function(template, templateVariables) {
   if (templateVariables == null) {
     templateVariables = {};
   }
-  return template.replace(/\{\{([a-zA-Z0-9_-]+)\}\}/g, (_, varName) =>
+  return template.replace(/\{\{\s*([a-zA-Z0-9_-]+)\s*\}\}/g, (_, varName) =>
     templateVariables[varName] != null ? templateVariables[varName] : ""
   );
 };
