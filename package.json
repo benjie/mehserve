@@ -63,11 +63,11 @@
   "devDependencies": {
     "babel": "6.23.0",
     "babel-cli": "6.26.0",
-    "babel-eslint": "8.0.1",
-    "eslint": "4.10.0",
-    "eslint-config-prettier": "2.7.0",
-    "eslint-plugin-prettier": "2.3.1",
-    "eslint_d": "5.1.0",
-    "prettier": "1.7.4"
+    "babel-eslint": "10.0.3",
+    "eslint": "6.4.0",
+    "eslint-config-prettier": "6.3.0",
+    "eslint-plugin-prettier": "3.1.1",
+    "eslint_d": "8.0.0",
+    "prettier": "1.18.2"
   }
 }

@@ -38,10 +38,8 @@ const renderTemplate = function(template, templateVariables) {
   if (templateVariables == null) {
     templateVariables = {};
   }
-  return template.replace(
-    /\{\{([a-zA-Z0-9_-]+)\}\}/g,
-    (_, varName) =>
-      templateVariables[varName] != null ? templateVariables[varName] : ""
+  return template.replace(/\{\{([a-zA-Z0-9_-]+)\}\}/g, (_, varName) =>
+    templateVariables[varName] != null ? templateVariables[varName] : ""
   );
 };
 
@@ -273,7 +271,7 @@ const MAX_SSL_CACHE_AGE_IN_MILLISECONDS = 1000 * 30;
 
 async function createSecureContext(servername) {
   let host = servername.split(":", 1)[0];
-  if (!await fsP.exists(`${CONFIG_DIR}/${host}.ssl.key`)) {
+  if (!(await fsP.exists(`${CONFIG_DIR}/${host}.ssl.key`))) {
     for (let suffixRegexp of SUFFIXES) {
       if (suffixRegexp.test(host)) {
         const shorterHost = host.replace(suffixRegexp, "");
