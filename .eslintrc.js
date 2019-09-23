@@ -3,8 +3,7 @@ module.exports = {
   parserOptions: {
     sourceType: "module",
   },
-  extends: ["eslint:recommended", "prettier"],
-  plugins: ["prettier"],
+  extends: ["eslint:recommended", "plugin:prettier/recommended"],
   env: {
     jest: true,
     es6: true,
@@ -16,22 +15,7 @@ module.exports = {
   },
   rules: {
     "no-debugger": 0,
-    "prettier/prettier": [
-      "error",
-      {
-        trailingComma: "es5",
-      },
-    ],
-    "comma-dangle": [
-      2,
-      {
-        arrays: "always-multiline",
-        objects: "always-multiline",
-        imports: "always-multiline",
-        exports: "always-multiline",
-        functions: "never",
-      },
-    ],
+    "prettier/prettier": "error",
     "no-confusing-arrow": 0,
     "no-console": 0,
     "no-else-return": 0,
