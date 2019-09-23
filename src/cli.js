@@ -1,6 +1,7 @@
 const fs = require("fs");
 const os = require("os");
 const { createSSLCertificateFor } = require("./ssl");
+const { version } = require("./package.json"); // Note we compile to the root folder
 
 const CONFIG_DIR = `${process.env.HOME}/.mehserve`;
 
@@ -12,7 +13,9 @@ try {
 
 const args = process.argv.slice(2);
 
-if (args[0] === "install") {
+if (args[0] === "--version") {
+  console.log("mehserve v" + version);
+} else if (args[0] === "install") {
   switch (os.platform()) {
     case "darwin":
       console.log(`\
@@ -94,6 +97,10 @@ Usage:
     Tells mehserve to respond to request for <subdomain> by:
     - if <destination> is a number then proxying to that port number
     - if <destination> is a path then by serving that folder as static content
+
+  mehserve --version
+
+    Output mehserve version number
 
 \
 `);
