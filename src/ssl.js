@@ -40,7 +40,7 @@ prompt = no
 [req_distinguished_name]
 CN = ${hostname}
 [v3_req]
-keyUsage = keyEncipherment, dataEncipherment
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
 extendedKeyUsage = serverAuth
 subjectAltName = @alt_names
 [alt_names]
