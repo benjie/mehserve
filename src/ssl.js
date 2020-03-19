@@ -55,7 +55,7 @@ DNS.3 = ${hostname}.dev
     "-new",
     "-newkey",
     "rsa:2048",
-    "-sha1",
+    "-sha256",
     "-days",
     "3650",
     "-nodes",
