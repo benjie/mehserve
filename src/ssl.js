@@ -94,6 +94,18 @@ Press enter to continue
       "/Applications/Utilities/Keychain Access.app",
       certDest,
     ]);
+  } else if (platform === "linux") {
+    console.log(`\
+
+On Ubuntu the following shell commands should install the SSL certificate and
+have it trusted by system utilities and Chrome. You may need to adjust these
+instructions for other platforms.
+
+    sudo mkdir -p /usr/local/share/ca-certificates/mehserve
+    sudo cp "$HOME/.mehserve/${hostname}.ssl.crt" "/usr/local/share/ca-certificates/mehserve/${hostname}.ssl.crt"
+    sudo update-ca-certificates
+    certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n "${hostname}" -i "$HOME/.mehserve/${hostname}.ssl.crt"
+`);
   } else {
     console.log(
       `We don't have instructions for '${platform}' yet (PRs are welcome!); you need to add '${certDest}' as a trusted certificate`
