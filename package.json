@@ -1,6 +1,6 @@
 {
   "name": "mehserve",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "A simple port-sharing proxy for development on multiple local domains, supports websockets",
   "main": "index.js",
   "bin": {
