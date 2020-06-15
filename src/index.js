@@ -215,6 +215,13 @@ proxy.on("error", function(e) {
   console.error(e.stack);
 });
 
+proxy.on("proxyReq", function(proxyReq, req, res, options) {
+  proxyReq.setHeader(
+    "x-forwarded-proto",
+    req.connection.encrypted ? "https" : "http"
+  );
+});
+
 var proxyWithExponentialBackoff = function(req, res, next, attempts) {
   if (attempts == null) {
     attempts = 0;
