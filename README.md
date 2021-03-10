@@ -75,7 +75,9 @@ functionality would be welcome. In the mean time we recommend you [set up
 `pm2`](http://pm2.keymetrics.io/docs/usage/quick-start/) and then tell it to
 run mehserve with:
 
-`pm2 run /path/to/mehserve -- run --exponential-backoff && pm2 dump`
+```
+pm2 start `which mehserve` -- run --exponential-backoff && pm2 dump
+```
 
 ### Configuring subdomains ⚙️
 
