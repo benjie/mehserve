@@ -112,7 +112,7 @@ This is an issue with discoveryd (it also affects Pow - see
 https://github.com/basecamp/pow/issues/471) - should be fixed by
 updating to OS X 10.10.4
 
-## Troubleshooting
+## Troubleshooting 🕵️
 
 * If you get the message "Invalid Host header" in your Vue project, add `disableHostCheck: true` to the `devServer` section of your `vue.config.js`. More information [here](https://github.com/benjie/mehserve/issues/23).
 
