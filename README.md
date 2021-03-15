@@ -112,9 +112,17 @@ This is an issue with discoveryd (it also affects Pow - see
 https://github.com/basecamp/pow/issues/471) - should be fixed by
 updating to OS X 10.10.4
 
+#### Configuration location 🧭
+
+Configuration is saved as files stored under `~/.mehserve`. To remove a service
+registered as `myapi`, delete the file `~/.mehserve/myapi` (and any related
+files such as SSL certificates/keys/etc).
+
 ## Troubleshooting 🕵️
 
-* If you get the message "Invalid Host header" in your Vue project, add `disableHostCheck: true` to the `devServer` section of your `vue.config.js`. More information [here](https://github.com/benjie/mehserve/issues/23).
+- If you get the message "Invalid Host header" in your Vue project, add
+  `disableHostCheck: true` to the `devServer` section of your `vue.config.js`.
+  More information [here](https://github.com/benjie/mehserve/issues/23).
 
 ## TODO 😅
 
