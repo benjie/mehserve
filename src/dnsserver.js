@@ -3,7 +3,7 @@ const dns = require("native-dns");
 const server = dns.createServer();
 
 server.on("request", function(req, res) {
-  if (req.question[0].name.match(/\.(meh|dev)/)) {
+  if (req.question[0].name.match(/\.(meh|dev|localhost)/)) {
     res.answer.push(
       dns.A({
         name: req.question[0].name,

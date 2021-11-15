@@ -45,6 +45,7 @@ extendedKeyUsage = serverAuth
 subjectAltName = @alt_names
 [alt_names]
 DNS.1 = ${hostname}
+DNS.2 = ${hostname}.localhost
 DNS.2 = ${hostname}.meh
 DNS.3 = ${hostname}.dev
 `

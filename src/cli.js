@@ -25,6 +25,7 @@ Please note that you will be responsible for undoing these changes should you wi
 
   sudo mkdir -p /etc/resolver
   sudo cp ${__dirname}/meh.resolver /etc/resolver/meh
+  sudo cp ${__dirname}/meh.resolver /etc/resolver/localhost
   sudo cp ${__dirname}/meh.firewall.plist /Library/LaunchDaemons/meh.firewall.plist
   sudo launchctl load -w /Library/LaunchDaemons/meh.firewall.plist
 

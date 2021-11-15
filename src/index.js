@@ -13,7 +13,7 @@ const HTML_DIR = `${__dirname}/html`;
 const PORT = process.env.PORT ? process.env.PORT : 12439;
 const SSL_PORT = process.env.SSL_PORT ? process.env.SSL_PORT : 12443;
 const DNS_PORT = process.env.DNS_PORT ? process.env.DNS_PORT : 15353;
-const SUFFIXES = [/\.dev$/i, /\.meh$/i, /(\.[0-9]+){2,4}\.xip\.io$/i];
+const SUFFIXES = [/\.dev$/i, /\.meh$/i, /\.localhost$/i, /(\.[0-9]+){2,4}\.xip\.io$/i];
 // Maximum number of attempts with exponential back-off
 let EXPONENTIAL_MAXIMUM_ATTEMPTS = 25;
 // Maximum delay between exponential back-off attempts
