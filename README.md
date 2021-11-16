@@ -87,7 +87,7 @@ To set up a subdomain, simply run
 
 `mehserve add mysite 1337`
 
-This'll tell mehserve to proxy all HTTP requests for `mysite.meh, mysite.localhost`,
+This'll tell mehserve to proxy all HTTP requests for `mysite.meh`, mysite.localhost`,
 and `mysite.*.*.*.*.xip.io` to `localhost:1337`
 
 #### Static files 📄
