@@ -33,7 +33,7 @@ was originally a joke... Hopefully no-one registers the `.meh` TLD!
 - Easy to configure
 - Subdomain configuration is updated on a per-request basis - no need to
   restart server
-- supports [xip.io](http://xip.io/) domains
+- supports [xip.io](http://xip.io/) and `.localhost` domains
 - SSL termination (using SNI to support multiple domains on one port)
 - Self-signed SSL certificate generation and help installing
 - `mehserve run --exponential-backoff` will automatically re-attempt requests
@@ -87,7 +87,7 @@ To set up a subdomain, simply run
 
 `mehserve add mysite 1337`
 
-This'll tell mehserve to proxy all HTTP requests for `mysite.meh`
+This'll tell mehserve to proxy all HTTP requests for `mysite.meh`, `mysite.localhost`,
 and `mysite.*.*.*.*.xip.io` to `localhost:1337`
 
 #### Static files 📄
@@ -97,7 +97,7 @@ Alternatively, to serve static files:
 `mehserve add staticsite /path/to/public`
 
 This'll tell mehserve to serve static content from `/path/to/public/` to anyone
-requesting `http://staticsite.meh/`
+requesting `http://staticsite.meh/` or `http://mysite.localhost`
 
 #### SSL certificates 🔐
 
